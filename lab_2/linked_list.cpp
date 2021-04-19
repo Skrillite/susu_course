@@ -9,6 +9,7 @@
 
 namespace lab_2 {
     using namespace std;
+    using namespace chrono;
 
     struct Node {
         Node* next{};
@@ -19,52 +20,51 @@ namespace lab_2 {
         string name;
         string type_of_payment;
 
-        Node(Node* next, int ap, int house, string name, string payment)
+        Node(Node* next, int ap, int house, string name, year_month_day date, string payment)
             : ap_num(ap)
             , house_num(house)
-            , name(std::move(name))
-            , type_of_payment(std::move(payment))
+            , name(move(name))
+            , date(date)
+            , type_of_payment(move(payment))
         {}
     };
 
     struct MergeSort {
         explicit MergeSort(function<bool(Node lhs, Node rhs)> predicate)
-            : greaterThan(std::move(predicate)) {} ;
+                : greaterThan(std::move(predicate)) {};
 
-        Node* operator() (Node* begin, Node* end) {
-            sort(begin, end);
+        Node* operator() (Node* begin, Node* end = nullptr) {
+            return sort(begin);
         }
 
-        Node* sort(Node* begin, Node* end = nullptr) {
+        Node* sort(Node* begin) {
 
             if (begin == nullptr || begin->next == nullptr) return begin;
 
-            auto mid = split(begin, end);
+            auto mid = split(begin);
 
-            auto first = sort(begin, mid);
-            auto second = sort(mid, end);
+            auto first = sort(begin);
+            auto second = sort(mid);
 
             if (greaterThan(*first, *second)) swap(first, second);
+
             Node* res = first;
-
-            while (first->next != mid && second != end) {
-                if (greaterThan(*first->next, *second)) {
-                    auto tmp = first->next;
-                    auto tmp2 = second->next;
+            while (first->next != nullptr && second != nullptr) {
+                if (greaterThan(*(first->next), *second)) {
+                    auto first_next  = first->next;
+                    auto second_next = second->next;
 
                     first->next = second;
-                    second->next = tmp;
-                    first = tmp;
-                    second = tmp2;
-                } else {
-                    auto tmp = second->next;
-                    second->next = first->next;
-                    first->next = second;
-                    second = tmp;
+                    second->next = first_next;
+                    first = second;
+                    second = second_next;
+                }
+                else {
+                    first = first->next;
                 }
             }
 
-            if (first == mid) first->next = second;
+            if (first->next == nullptr) first->next = second;
 
             return res;
         }
@@ -72,16 +72,21 @@ namespace lab_2 {
     private:
         function<bool(Node lhs, Node rhs)> greaterThan;
 
-        Node* split(Node* begin, Node* end) {
+        Node* split(Node* begin) {
             Node* mid(begin), * cend(begin->next);
 
-            char pc(0);
-            while (cend->next != end) {
+            char pc(1);
+            while (cend->next) {
                 cend = cend->next;
                 if (++pc & 1) mid = mid->next;
             }
 
-            return mid;
+            auto md = mid->next;
+
+            cend->next = nullptr;
+            mid->next = nullptr;
+
+            return md;
         }
     };
 
@@ -89,34 +94,82 @@ namespace lab_2 {
         Node* root{};
 
         void sortByHouse() {
-            MergeSort sort([](const Node& lhs, const Node& rhs)->bool {
+            root = MergeSort([](const Node& lhs, const Node& rhs)->bool {
                 return lhs.house_num > rhs.house_num;
-            });
-            sort.sort(root, nullptr);
+            })(root, nullptr);
+        }
+        void sortByPayment() {
+            root = MergeSort([](const Node& lhs, const Node& rhs) -> bool {
+                return lhs.type_of_payment > rhs.type_of_payment;
+            })(root, nullptr);
+        }
+        void sortByDate() {
+            root = MergeSort([](const Node& lhs, const Node& rhs) -> bool {
+                return lhs.date > rhs.date;
+            })(root, nullptr);
         }
 
-        LinkedList(size_t n) {
-            srand(time(nullptr));
-
+        Node* traversal(const function<bool(Node*)>& func) {
             auto curr = root;
-            while(n-- > 0) {
-                curr = new Node(
-                        curr,
+            while (curr) {
+                if (func(curr)) return curr;
+                curr = curr->next;
+            }
+            return curr;
+        }
+
+
+        explicit LinkedList(size_t n) {
+            srand(high_resolution_clock::now().time_since_epoch().count());
+
+            if (n > 0) {
+                root = new Node(
+                        nullptr,
                         rand() % int(9e11) + int(1e11),
                         rand() % 99,
-                        gen(rand() % 26 + 5),
-                        gen(rand() % 6 + 10)
+                        name_gen(rand() % 26 + 5),
+                        year_month_day(
+                                year(rand() % 42 + 1980),
+                                month(rand() % 13),
+                                day(rand() % 31)
+                                ),
+                        string_gen(rand() % 6 + 10, 'a', 'z')
                 );
+                auto curr = root;
+                while (--n) {
+                    curr->next = new Node(
+                            nullptr,
+                            rand() % int(9e11) + int(1e11),
+                            rand() % 99,
+                            name_gen(rand() % 26 + 5),
+                            year_month_day(
+                                    year(rand() % 42 + 1980),
+                                    month(rand() % 13),
+                                    day(rand() % 31)
+                            ),
+                            string_gen(rand() % 6 + 10, 'a', 'z')
+                    );
+                    curr = curr->next;
+                }
             }
         }
 
-        static string gen(int len) {
+
+        //  UTILS
+
+        static string string_gen(int len, int first, int last) {
             string res;
             res.reserve(len);
 
-            while (len-- > 0) {
-                res.push_back(rand() % 58 + 65);
-            }
+            while (len--) res.push_back(first + (rand() % (last - first + 1)));
+
+            return res;
+        }
+
+        static string name_gen(int len) {
+            if (len > 0)
+                return string_gen(1, 'A', 'Z') + string_gen(len - 1, 'a', 'z');
+            return "";
         }
     };
 }
