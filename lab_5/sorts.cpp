@@ -64,4 +64,14 @@ namespace sorts {
         brokenMerge(begin, mid, end);
     }
 
+    void brokenInsertionSort(iter begin, iter end) {
+        vector<int*> even; even.reserve((end - begin)/2);
+        for (auto i = begin; i != end; i++)
+            if (!(*i & 1)) even.push_back(&*i);
+
+        for (auto i = even.begin(); i != even.end(); i++) {
+                for (auto j = i; j != even.begin() && **(j - 1) > **j; j--)
+                    swap (**j, **(j - 1));
+        }
+    }
 }

@@ -27,8 +27,14 @@ namespace {
     TEST(mergeSort, demo) {
         vector<int> vec1 {1, 6, 3, -4, 9, 2}, vec2(vec1);
 
+        for (auto i : vec1) cout << i << ' ';
+        cout << '\n';
+
         brokenMergeSort(vec1.begin(), vec1.end());
         brokenSTDSort(vec2);
+
+        for (auto i : vec1) cout << i << ' ';
+        cout << '\n';
 
         EXPECT_EQ(vec1, vec2);
     }
@@ -47,6 +53,41 @@ namespace {
             vector<int> vec2(vec1);
 
             brokenMergeSort(vec1.begin(), vec1.end());
+            brokenSTDSort(vec2);
+
+            EXPECT_EQ(vec1, vec2);
+        }
+    }
+
+    TEST(insertionSort, demo) {
+        vector<int> vec1 {1, 6, 3, -4, 9, 2}, vec2(vec1);
+
+        for (auto i : vec1) cout << i << ' ';
+        cout << '\n';
+
+        brokenInsertionSort(vec1.begin(), vec1.end());
+        brokenSTDSort(vec2);
+
+        for (auto i : vec1) cout << i << ' ';
+        cout << '\n';
+
+        EXPECT_EQ(vec1, vec2);
+    }
+
+    TEST(insertionSort, rand_tests) {
+        using namespace chrono;
+        srand(high_resolution_clock::now()
+                      .time_since_epoch().count());
+
+        int q = 100;
+        while (q--) {
+            int size = rand() % 1001 + 500;
+            vector<int> vec1(size);
+            for (auto &i : vec1) i = rand() % int(1e9);
+
+            vector<int> vec2(vec1);
+
+            brokenInsertionSort(vec1.begin(), vec1.end());
             brokenSTDSort(vec2);
 
             EXPECT_EQ(vec1, vec2);
