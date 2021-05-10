@@ -48,12 +48,12 @@ namespace lab_3 {
 //    template<comparable Data>
 //    Queue<Data>::Queue(vector<Data> vec)
 //            : _size(0) {
+//        cout << "sdfdfsf";
 //        for (auto i : vec) this->push(i);
 //    }
 
     void task(Queue<int> q) {
-        int min, max;
-        size_t minidx, maxidx;
+        int min, max, minidx(q.size()), maxidx(minidx);
 
         if (q.size() > 2) {
             min = max = q.front();
@@ -73,13 +73,24 @@ namespace lab_3 {
                 q.push(val);
             }
 
-            if (abs(min - max) > 1) {
+            if (abs(maxidx - minidx) > 1) {
                 size = q.size();
                 while (size--) {
                     auto val = q.pop();
 
-                    if (val == min) while (q.pop() != max) size--;
-                    else if (val == max) while (q.pop() != min) size--;
+                    if (val == min)
+                        while (q.front() != max) {
+                            size--;
+                            q.pop();
+                        }
+
+                    else if (val == max)
+                        while (q.front() != min) {
+                            size--;
+                            q.pop();
+                        }
+
+                    q.push(val);
                 }
             }
         }

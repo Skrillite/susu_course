@@ -5,7 +5,7 @@ namespace {
     using namespace lab_3;
 
     TEST (queue, test_1) {
-        Queue q(vector<int>{10, 1, 1, 1, 1, 0});
+        lab_3::Queue q(vector<int> {10, 1, 1, 1, 0});
 
         task(q);
         while (!q.empty()) cout << q.pop() << ' ';

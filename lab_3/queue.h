@@ -35,8 +35,10 @@ namespace lab_3 {
                 : first	(nullptr)
                 , last	(nullptr)
                 , _size (0) {}
-        explicit Queue(vector<Data> vec)
-                : _size(0) {
+        Queue(vector<Data> vec)
+                : _size(0)
+                , first (nullptr)
+                , last  (nullptr) {
             for (auto i : vec) this->push(i);
         };
     private:
