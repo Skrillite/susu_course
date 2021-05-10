@@ -8,14 +8,8 @@
 namespace lab_3 {
     using namespace std;
 
-    template<typename T>
-    concept comparable = requires(T const & a, T const & b) {
-        {a < b} -> convertible_to<bool>;
-    };
-
-    template <comparable Data>
     struct Node {
-        Data data;
+        int data;
         Node* next_node;
 
         Node(int& _data, Node* _next_node)
@@ -23,30 +17,26 @@ namespace lab_3 {
                 , data		(_data) {}
     };
 
-    template <comparable Data>
     struct Queue {
-        void push (Data data);
-        Data pop  ();
-        Data front();
-        size_t size ();
+        void push (int data);
+        int pop  ();
+        int front();
+        size_t size () const;
         bool empty();
+
+        vector<int> tovector();
 
         Queue()
                 : first	(nullptr)
                 , last	(nullptr)
                 , _size (0) {}
-        Queue(vector<Data> vec)
-                : _size(0)
-                , first (nullptr)
-                , last  (nullptr) {
-            for (auto i : vec) this->push(i);
-        };
+        explicit Queue(const vector<int>& vec);
     private:
-        Node<Data>* first;
-        Node<Data>* last;
+        Node* first;
+        Node* last;
         size_t _size{};
     };
 
-    void task(Queue<int> q);
+    Queue task(Queue q);
 }
 #endif //LAB_3_QUEUE_H

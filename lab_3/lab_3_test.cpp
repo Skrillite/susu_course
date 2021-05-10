@@ -1,15 +1,15 @@
 #include "gtest/gtest.h"
 #include "queue.h"
 
-namespace {
-    using namespace lab_3;
+namespace lab_3 {
 
     TEST (queue, test_1) {
-        lab_3::Queue q(vector<int> {10, 1, 1, 1, 0});
 
-        task(q);
-        while (!q.empty()) cout << q.pop() << ' ';
-        cout << '\n';
+        EXPECT_EQ(task(Queue(vector<int>{10, 1, 1, 1, 0})).tovector(),
+                  (vector<int>{10, 0}));
+
+        EXPECT_EQ(task(Queue(vector<int>{-3, -10, 1, 2, 0})).tovector(),
+                  (vector<int>{-3, -10, 2, 0}));
     }
 
     int main(int argc, char **argv) {

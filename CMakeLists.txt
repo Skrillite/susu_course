@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.17)
-project(lab_1)
+project(labs)
 
 set(CMAKE_CXX_STANDARD 20)
 #find_path(tmp g++.exe ENV{Path})
@@ -9,6 +9,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/googletest)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/lab_1)
 add_subdirectory(${CMAKE_SOURCE_DIR}/lab_2)
+add_subdirectory(${CMAKE_SOURCE_DIR}/lab_3)
 add_subdirectory(${CMAKE_SOURCE_DIR}/lab_5)
 
 if (MSVC)

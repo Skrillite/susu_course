@@ -2,22 +2,20 @@
 
 namespace lab_3 {
 
-    template<comparable Data>
-    void Queue<Data>::push(Data data) {
+    void Queue::push(int data) {
         if (!empty()) {
-            first->next_node = new Node<Data>(data, nullptr);
+            first->next_node = new Node(data, nullptr);
             first = first->next_node;
         } else {
-            first = new Node<Data>(data, nullptr);
+            first = new Node(data, nullptr);
             last = first;
         }
         _size++;
     }
 
-    template<comparable Data>
-    Data Queue<Data>::pop() {
+    int Queue::pop() {
         if (!empty()) {
-            Node<Data> *tmp = last;
+            Node *tmp = last;
             auto ret = last->data;
 
             last = last->next_node;
@@ -26,33 +24,43 @@ namespace lab_3 {
 
             return ret;
         }
+        return 0;
     }
 
-    template<comparable Data>
-    Data Queue<Data>::front() {
+    int Queue::front() {
         if (!empty())
             return last->data;
         return 0;
     }
 
-    template<comparable Data>
-    bool Queue<Data>::empty() {
+    bool Queue::empty() {
         return last == nullptr;
     }
 
-    template<comparable Data>
-    size_t Queue<Data>::size() {
+    size_t Queue::size() const {
         return _size;
     }
 
-//    template<comparable Data>
-//    Queue<Data>::Queue(vector<Data> vec)
-//            : _size(0) {
-//        cout << "sdfdfsf";
-//        for (auto i : vec) this->push(i);
-//    }
+    Queue::Queue(const vector<int>& vec)
+            : _size (0)
+            , first (nullptr)
+            , last  (nullptr) {
+        for (auto i : vec) this->push(i);
+    }
 
-    void task(Queue<int> q) {
+    vector<int> Queue::tovector() {
+        vector<int> ret; ret.reserve(size());
+
+        auto curr = last;
+        while (curr != nullptr) {
+            ret.push_back(curr->data);
+            curr = curr->next_node;
+        }
+
+        return ret;
+
+    }
+    Queue task(Queue q) {
         int min, max, minidx(q.size()), maxidx(minidx);
 
         if (q.size() > 2) {
@@ -94,5 +102,13 @@ namespace lab_3 {
                 }
             }
         }
+        return q;
     }
 }
+
+//int main() {
+//    using namespace std;
+//    using namespace lab_3;
+//    task(Queue<int> (vector<int> {1, 2, 3, 4})).tovector();
+//    cout << 1;
+//}
