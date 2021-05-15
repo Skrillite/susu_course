@@ -1,4 +1,4 @@
-#include "queue.h"
+#include "queue.hpp"
 
 namespace lab_3 {
 
@@ -7,8 +7,7 @@ namespace lab_3 {
             first->next_node = new Node(data, nullptr);
             first = first->next_node;
         } else {
-            first = new Node(data, nullptr);
-            last = first;
+            first = last = new Node(data, nullptr);
         }
         _size++;
     }
@@ -86,17 +85,27 @@ namespace lab_3 {
                 while (size--) {
                     auto val = q.pop();
 
-                    if (val == min)
+                    if (val == min) {
+                        q.push(val);
                         while (q.front() != max) {
                             size--;
                             q.pop();
                         }
+                        size--;
+                        q.push(q.pop());
+                        continue;
+                    }
 
-                    else if (val == max)
+                    else if (val == max) {
+                        q.push(val);
                         while (q.front() != min) {
                             size--;
                             q.pop();
                         }
+                        size--;
+                        q.push(q.pop());
+                        continue;
+                    }
 
                     q.push(val);
                 }
@@ -105,10 +114,3 @@ namespace lab_3 {
         return q;
     }
 }
-
-//int main() {
-//    using namespace std;
-//    using namespace lab_3;
-//    task(Queue<int> (vector<int> {1, 2, 3, 4})).tovector();
-//    cout << 1;
-//}
