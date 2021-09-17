@@ -48,8 +48,13 @@ namespace {
 
         list.sortByPayment();
         curr = list.root;
+        auto prev = curr;
+
         while (curr) {
+            EXPECT_LE(prev->type_of_payment, curr->type_of_payment);
+
             cout << curr->type_of_payment << '\n';
+            prev = curr;
             curr = curr->next;
         }
     }

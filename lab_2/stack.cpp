@@ -23,7 +23,7 @@ namespace stack {
             return ret;
         }
 
-        int sum(int k) {
+        int sum(int k) const {
             int counter(0);
             auto curr = root;
             while (k--) {

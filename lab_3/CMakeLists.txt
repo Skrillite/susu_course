@@ -11,6 +11,6 @@ add_library(queue
 
 target_link_libraries(lab_3
         PRIVATE queue
-        PUBLIC set_operations
+        PRIVATE set_operations
         PUBLIC gtest
         PUBLIC gtest_main)
